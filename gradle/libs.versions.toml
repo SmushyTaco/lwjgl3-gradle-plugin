@@ -1,0 +1,47 @@
+[versions]
+##########################################################################
+# Plugins
+# Check this on https://kotlinlang.org/docs/releases.html
+kotlin = "2.2.21"
+# Check this on https://github.com/Kotlin/dokka/releases/latest/
+dokka = "2.1.0"
+# Check this on https://plugins.gradle.org/plugin/dev.yumi.gradle.licenser/
+yumiGradleLicenser = "2.2.1"
+# Check this on https://plugins.gradle.org/plugin/com.gradle.plugin-publish/
+gradlePluginPublish = "2.0.0"
+##########################################################################
+# Java Configuration
+# The Java version the JDK will be for compiling and running code.
+java = "17"
+# The Java version the JDK will be for running Gradle.
+gradleJava = "17"
+##########################################################################
+# Dependencies
+# Check this on https://central.sonatype.com/artifact/org.apache.maven/maven-artifact/
+maven-base = "3.9.11"
+# Check this on https://central.sonatype.com/artifact/org.apache.maven.resolver/maven-resolver-api/
+maven-resolver = "2.0.13"
+# Check this on https://central.sonatype.com/artifact/org.apache.maven.resolver/maven-resolver-transport-http/
+maven-resolver-transport-http = "1.9.24"
+# Check this on https://central.sonatype.com/artifact/org.slf4j/slf4j-simple/
+slf4jSimple = "2.0.17"
+##########################################################################
+
+[libraries]
+maven-artifact = { group = "org.apache.maven", name = "maven-artifact", version.ref = "maven-base" }
+maven-resolver-provider = { group = "org.apache.maven", name = "maven-resolver-provider", version.ref = "maven-base" }
+maven-resolver-api = { group = "org.apache.maven.resolver", name = "maven-resolver-api", version.ref = "maven-resolver" }
+maven-resolver-spi = { group = "org.apache.maven.resolver", name = "maven-resolver-spi", version.ref = "maven-resolver" }
+maven-resolver-util = { group = "org.apache.maven.resolver", name = "maven-resolver-util", version.ref = "maven-resolver" }
+maven-resolver-impl = { group = "org.apache.maven.resolver", name = "maven-resolver-impl", version.ref = "maven-resolver" }
+maven-resolver-connector-basic = { group = "org.apache.maven.resolver", name = "maven-resolver-connector-basic", version.ref = "maven-resolver" }
+maven-resolver-transport-http = { group = "org.apache.maven.resolver", name = "maven-resolver-transport-http", version.ref = "maven-resolver-transport-http" }
+maven-resolver-transport-file = { group = "org.apache.maven.resolver", name = "maven-resolver-transport-file", version.ref = "maven-resolver" }
+maven-resolver-supplier-mvn3 = { group = "org.apache.maven.resolver", name = "maven-resolver-supplier-mvn3", version.ref = "maven-resolver" }
+slf4jSimple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "slf4jSimple" }
+
+[plugins]
+kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
+yumiGradleLicenser = { id = "dev.yumi.gradle.licenser", version.ref = "yumiGradleLicenser" }
+gradlePluginPublish = { id = "com.gradle.plugin-publish", version.ref = "gradlePluginPublish" }
