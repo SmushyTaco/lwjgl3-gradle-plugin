@@ -29,7 +29,7 @@ package com.smushytaco.lwjgl_gradle
  * @property versionToNatives map of LWJGL version → native classifiers (without the `natives-` prefix).
  */
 @Suppress("kotlin:S1192")
-enum class Module(val artifact: String, val since: String, val versionToNatives: Map<String, List<String>>) {
+enum class Module(val artifact: String, val since: String, val versionToNatives: Map<String, List<String>>): LwjglEntry {
     CORE(
         "lwjgl",
         "3.1.0",

@@ -1,0 +1,20 @@
+Registers LWJGL modules on the specified configuration.
+
+The selected modules will:
+- Always include [Module.CORE] if it is not already present.
+- Respect each module’s [Module.since] version so that modules newer than
+  the configured [version] are skipped.
+- Add the appropriate native artifacts depending on
+  [usePredefinedPlatforms] and [platforms], or the inferred host platform.
+
+@param compileConfiguration
+The configuration that receives the LWJGL Java artifacts.
+Use `null` to suppress Java artifacts entirely.
+
+@param runtimeConfiguration
+The configuration that receives the LWJGL native artifacts.
+Use `null` to suppress native artifacts.
+
+@param entries
+{@get PHRASE} [LwjglEntry] values to register on the
+`implementation` configuration.

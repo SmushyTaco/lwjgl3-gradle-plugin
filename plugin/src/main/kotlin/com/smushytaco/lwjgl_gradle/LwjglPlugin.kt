@@ -39,7 +39,6 @@ import org.gradle.api.Project
  * }
  * ```
  */
-@Suppress("unused")
 class LwjglPlugin : Plugin<Project> {
     /**
      * Applies the LWJGL plugin to the given [project] by registering the
@@ -58,7 +57,8 @@ class LwjglPlugin : Plugin<Project> {
             LwjglExtension::class.java,
             project.objects,
             project.providers,
-            project.dependencies
+            project.dependencies,
+            project.repositories
         )
     }
 }

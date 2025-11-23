@@ -18,12 +18,15 @@ package com.smushytaco.lwjgl_gradle
 
 import com.smushytaco.lwjgl_gradle.LwjglExtension.Companion.GROUP
 import org.apache.maven.artifact.versioning.ComparableVersion
+import org.gradle.api.Named
 import org.gradle.api.artifacts.dsl.DependencyHandler
+import org.gradle.api.artifacts.dsl.RepositoryHandler
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.provider.Provider
 import org.gradle.api.provider.ProviderFactory
+import org.gradle.kotlin.dsl.maven
 import java.util.*
 import javax.inject.Inject
 
@@ -50,8 +53,13 @@ import javax.inject.Inject
  * @param dependencies
  * The project's [DependencyHandler] used internally to register the resolved
  * LWJGL dependencies on the appropriate configurations.
+ *
+ * @param repositories
+ * The project's [RepositoryHandler] used internally to register the LWJGL
+ * snapshot Maven repository when snapshot versions are in use.
  */
-abstract class LwjglExtension @Inject constructor(objects: ObjectFactory, providers: ProviderFactory, private val dependencies: DependencyHandler) {
+@Suppress("unused")
+abstract class LwjglExtension @Inject constructor(objects: ObjectFactory, providers: ProviderFactory, private val dependencies: DependencyHandler, private val repositories: RepositoryHandler) {
     /**
      * Holds constants used by [LwjglExtension].
      *
@@ -188,189 +196,162 @@ abstract class LwjglExtension @Inject constructor(objects: ObjectFactory, provid
                 }
             }
     /**
-     * Registers LWJGL modules on the `implementation` configuration.
+     * URL of the Maven repository to use for resolving LWJGL snapshot versions.
      *
-     * The selected modules will:
-     * - Always include [Module.CORE] if it is not already present.
-     * - Respect each module’s [Module.since] version so that modules newer than
-     *   the configured [version] are skipped.
-     * - Add the appropriate native artifacts depending on
-     *   [usePredefinedPlatforms] and [platforms], or the inferred host platform.
+     * This repository is added automatically when [autoAddSnapshotRepository] is
+     * enabled and the configured LWJGL [version] ends with `-SNAPSHOT`.
      *
-     * This is the main entry point for configuring LWJGL runtime and compile-time
-     * dependencies for production code.
-     *
-     * @param modules
-     * A collection of LWJGL [Module] values to register on the
-     * `implementation` configuration.
+     * Defaults to the Maven Central Snapshots repository on central.sonatype.com.
      */
-    @Suppress("unused")
-    fun implementation(modules: Iterable<Module>) = addModules(false, modules)
-    /**
-     * Registers LWJGL modules on the `implementation` configuration.
-     *
-     * The selected modules will:
-     * - Always include [Module.CORE] if it is not already present.
-     * - Respect each module’s [Module.since] version so that modules newer than
-     *   the configured [version] are skipped.
-     * - Add the appropriate native artifacts depending on
-     *   [usePredefinedPlatforms] and [platforms], or the inferred host platform.
-     *
-     * This is the main entry point for configuring LWJGL runtime and compile-time
-     * dependencies for production code.
-     *
-     * @param modules
-     * One or more LWJGL [Module] values to register on the
-     * `implementation` configuration.
-     */
-    @Suppress("unused")
-    fun implementation(vararg modules: Module) = implementation(modules.toList())
-    /**
-     * Registers LWJGL modules on the `testImplementation` configuration.
-     *
-     * The selected modules will:
-     * - Always include [Module.CORE] if it is not already present.
-     * - Respect each module’s [Module.since] version so that modules newer than
-     *   the configured [version] are skipped.
-     * - Add the appropriate native artifacts depending on
-     *   [usePredefinedPlatforms] and [platforms], or the inferred host platform.
-     *
-     * Use this for LWJGL dependencies that are only required for test sources.
-     *
-     * @param modules
-     * A collection of LWJGL [Module] values to register on the
-     * `testImplementation` configuration.
-     */
-    @Suppress("unused")
-    fun testImplementation(modules: Iterable<Module>) = addModules(true, modules)
-    /**
-     * Registers LWJGL modules on the `testImplementation` configuration.
-     *
-     * The selected modules will:
-     * - Always include [Module.CORE] if it is not already present.
-     * - Respect each module’s [Module.since] version so that modules newer than
-     *   the configured [version] are skipped.
-     * - Add the appropriate native artifacts depending on
-     *   [usePredefinedPlatforms] and [platforms], or the inferred host platform.
-     *
-     * Use this for LWJGL dependencies that are only required for test sources.
-     *
-     * @param modules
-     * One or more LWJGL [Module] values to register on the
-     * `testImplementation` configuration.
-     */
-    @Suppress("unused")
-    fun testImplementation(vararg modules: Module) = testImplementation(modules.toList())
-    /**
-     * Registers LWJGL presets on the `implementation` configuration.
-     *
-     * Each preset expands to one or more LWJGL [Module] values. The resulting
-     * module set will:
-     * - Always include [Module.CORE] if it is not already present.
-     * - Respect each module’s [Module.since] version so that modules newer than
-     *   the configured [version] are skipped.
-     * - Add the appropriate native artifacts depending on
-     *   [usePredefinedPlatforms] and [platforms], or the inferred host platform.
-     *
-     * This is a convenient way to express common LWJGL combinations such as
-     * “getting started” or “minimal OpenGL” setups.
-     *
-     * @param presets
-     * A collection of LWJGL [Preset] values whose modules should be registered
-     * on the `implementation` configuration.
-     */
-    @JvmName("implementationPreset")
-    @Suppress("unused")
-    fun implementation(presets: Iterable<Preset>) = addModules(false, presets.flatMap { it.modules })
-    /**
-     * Registers LWJGL presets on the `implementation` configuration.
-     *
-     * Each preset expands to one or more LWJGL [Module] values. The resulting
-     * module set will:
-     * - Always include [Module.CORE] if it is not already present.
-     * - Respect each module’s [Module.since] version so that modules newer than
-     *   the configured [version] are skipped.
-     * - Add the appropriate native artifacts depending on
-     *   [usePredefinedPlatforms] and [platforms], or the inferred host platform.
-     *
-     * This is a convenient way to express common LWJGL combinations such as
-     * “getting started” or “minimal OpenGL” setups.
-     *
-     * @param presets
-     * One or more LWJGL [Preset] values whose modules should be registered
-     * on the `implementation` configuration.
-     */
-    @Suppress("unused")
-    fun implementation(vararg presets: Preset) = implementation(presets.toList())
-    /**
-     * Registers LWJGL presets on the `testImplementation` configuration.
-     *
-     * Each preset expands to one or more LWJGL [Module] values. The resulting
-     * module set will:
-     * - Always include [Module.CORE] if it is not already present.
-     * - Respect each module’s [Module.since] version so that modules newer than
-     *   the configured [version] are skipped.
-     * - Add the appropriate native artifacts depending on
-     *   [usePredefinedPlatforms] and [platforms], or the inferred host platform.
-     *
-     * Use this for LWJGL dependency presets that are only required for test
-     * sources.
-     *
-     * @param presets
-     * A collection of LWJGL [Preset] values whose modules should be registered
-     * on the `testImplementation` configuration.
-     */
-    @JvmName("testImplementationPreset")
-    @Suppress("unused")
-    fun testImplementation(presets: Iterable<Preset>) = addModules(true, presets.flatMap { it.modules })
-    /**
-     * Registers LWJGL presets on the `testImplementation` configuration.
-     *
-     * Each preset expands to one or more LWJGL [Module] values. The resulting
-     * module set will:
-     * - Always include [Module.CORE] if it is not already present.
-     * - Respect each module’s [Module.since] version so that modules newer than
-     *   the configured [version] are skipped.
-     * - Add the appropriate native artifacts depending on
-     *   [usePredefinedPlatforms] and [platforms], or the inferred host platform.
-     *
-     * Use this for LWJGL dependency presets that are only required for test
-     * sources.
-     *
-     * @param presets
-     * One or more LWJGL [Preset] values whose modules should be registered
-     * on the `testImplementation` configuration.
-     */
-    @Suppress("unused")
-    fun testImplementation(vararg presets: Preset) = testImplementation(presets.toList())
+    val snapshotRepositoryUrl: Property<String> = objects.property(String::class.java).convention("https://central.sonatype.com/repository/maven-snapshots/")
 
-    private fun addModules(test: Boolean, modules: Iterable<Module>) {
+    /**
+     * The name assigned to the automatically-added snapshot repository.
+     *
+     * This name is applied to the repository created when
+     * [autoAddSnapshotRepository] is `true` and the LWJGL [version] is a snapshot.
+     *
+     * Defaults to `"mavenCentralSnapshots"`.
+     */
+    val snapshotRepositoryName: Property<String> = objects.property(String::class.java).convention("mavenCentralSnapshots")
+
+    /**
+     * Whether the plugin should automatically add a snapshot repository when the
+     * configured LWJGL [version] ends with `-SNAPSHOT`.
+     *
+     * When enabled (the default), the plugin registers a Maven repository using
+     * [snapshotRepositoryUrl] and [snapshotRepositoryName] so that snapshot LWJGL
+     * artifacts can be resolved without additional user configuration.
+     */
+    val autoAddSnapshotRepository: Property<Boolean> = objects.property(Boolean::class.java).convention(true)
+
+    /** @includeFile (../../../../../../kdoc_function.txt) {@set CONFIGURATION implementation} {@set PHRASE A collection of} {@set NATIVES Target configuration for natives, or null to disable them.} */
+    fun implementation(entries: Iterable<LwjglEntry>, wireNativesTo: String? = "runtimeOnly") = addModules("implementation", wireNativesTo, entries)
+    /** @includeFile (../../../../../../kdoc_function.txt) {@set CONFIGURATION implementation} {@set PHRASE A collection of} {@set NATIVES Configuration whose name natives are added to.} */
+    fun implementation(entries: Iterable<LwjglEntry>, wireNativesTo: Named) = implementation(entries, wireNativesTo.name)
+    /** @includeFile (../../../../../../kdoc_function.txt) {@set CONFIGURATION implementation} {@set PHRASE One or more} {@set NATIVES Target configuration for natives, or null to disable them.} */
+    fun implementation(vararg entries: LwjglEntry, wireNativesTo: String? = "runtimeOnly") = implementation(entries.toList(), wireNativesTo)
+    /** @includeFile (../../../../../../kdoc_function.txt) {@set CONFIGURATION implementation} {@set PHRASE One or more} {@set NATIVES Configuration whose name natives are added to.} */
+    fun implementation(vararg entries: LwjglEntry, wireNativesTo: Named) = implementation(entries.toList(), wireNativesTo)
+
+    /** @includeFile (../../../../../../kdoc_function.txt) {@set CONFIGURATION testImplementation} {@set PHRASE A collection of} {@set NATIVES Target configuration for natives, or null to disable them.} */
+    fun testImplementation(entries: Iterable<LwjglEntry>, wireNativesTo: String? = "testRuntimeOnly") = addModules("testImplementation", wireNativesTo, entries)
+    /** @includeFile (../../../../../../kdoc_function.txt) {@set CONFIGURATION testImplementation} {@set PHRASE A collection of} {@set NATIVES Configuration whose name natives are added to.} */
+    fun testImplementation(entries: Iterable<LwjglEntry>, wireNativesTo: Named) = testImplementation(entries, wireNativesTo.name)
+    /** @includeFile (../../../../../../kdoc_function.txt) {@set CONFIGURATION testImplementation} {@set PHRASE One or more} {@set NATIVES Target configuration for natives, or null to disable them.} */
+    fun testImplementation(vararg entries: LwjglEntry, wireNativesTo: String? = "testRuntimeOnly") = testImplementation(entries.toList(), wireNativesTo)
+    /** @includeFile (../../../../../../kdoc_function.txt) {@set CONFIGURATION testImplementation} {@set PHRASE One or more} {@set NATIVES Configuration whose name natives are added to.} */
+    fun testImplementation(vararg entries: LwjglEntry, wireNativesTo: Named) = testImplementation(entries.toList(), wireNativesTo)
+
+    /** @includeFile (../../../../../../kdoc_function.txt) {@set CONFIGURATION api} {@set PHRASE A collection of} {@set NATIVES Target configuration for natives, or null to disable them.} */
+    fun api(entries: Iterable<LwjglEntry>, wireNativesTo: String? = "runtimeOnly") = addModules("api", wireNativesTo, entries)
+    /** @includeFile (../../../../../../kdoc_function.txt) {@set CONFIGURATION api} {@set PHRASE A collection of} {@set NATIVES Configuration whose name natives are added to.} */
+    fun api(entries: Iterable<LwjglEntry>, wireNativesTo: Named) = api(entries, wireNativesTo.name)
+    /** @includeFile (../../../../../../kdoc_function.txt) {@set CONFIGURATION api} {@set PHRASE One or more} {@set NATIVES Target configuration for natives, or null to disable them.} */
+    fun api(vararg entries: LwjglEntry, wireNativesTo: String? = "runtimeOnly") = api(entries.toList(), wireNativesTo)
+    /** @includeFile (../../../../../../kdoc_function.txt) {@set CONFIGURATION api} {@set PHRASE One or more} {@set NATIVES Configuration whose name natives are added to.} */
+    fun api(vararg entries: LwjglEntry, wireNativesTo: Named) = api(entries.toList(), wireNativesTo)
+
+    /** @includeFile (../../../../../../kdoc_function.txt) {@set CONFIGURATION testApi} {@set PHRASE A collection of} {@set NATIVES Target configuration for natives, or null to disable them.} */
+    fun testApi(entries: Iterable<LwjglEntry>, wireNativesTo: String? = "testRuntimeOnly") = addModules("testApi", wireNativesTo, entries)
+    /** @includeFile (../../../../../../kdoc_function.txt) {@set CONFIGURATION testApi} {@set PHRASE A collection of} {@set NATIVES Configuration whose name natives are added to.} */
+    fun testApi(entries: Iterable<LwjglEntry>, wireNativesTo: Named) = testApi(entries, wireNativesTo.name)
+    /** @includeFile (../../../../../../kdoc_function.txt) {@set CONFIGURATION testApi} {@set PHRASE One or more} {@set NATIVES Target configuration for natives, or null to disable them.} */
+    fun testApi(vararg entries: LwjglEntry, wireNativesTo: String? = "testRuntimeOnly") = testApi(entries.toList(), wireNativesTo)
+    /** @includeFile (../../../../../../kdoc_function.txt) {@set CONFIGURATION testApi} {@set PHRASE One or more} {@set NATIVES Configuration whose name natives are added to.} */
+    fun testApi(vararg entries: LwjglEntry, wireNativesTo: Named) = testApi(entries.toList(), wireNativesTo)
+
+    /** @includeFile (../../../../../../kdoc_function.txt) {@set CONFIGURATION compileOnly} {@set PHRASE A collection of} {@set NATIVES Target configuration for natives, or null to disable them.} */
+    fun compileOnly(entries: Iterable<LwjglEntry>, wireNativesTo: String? = null) = addModules("compileOnly", wireNativesTo, entries)
+    /** @includeFile (../../../../../../kdoc_function.txt) {@set CONFIGURATION compileOnly} {@set PHRASE A collection of} {@set NATIVES Configuration whose name natives are added to.} */
+    fun compileOnly(entries: Iterable<LwjglEntry>, wireNativesTo: Named) = compileOnly(entries, wireNativesTo.name)
+    /** @includeFile (../../../../../../kdoc_function.txt) {@set CONFIGURATION compileOnly} {@set PHRASE One or more} {@set NATIVES Target configuration for natives, or null to disable them.} */
+    fun compileOnly(vararg entries: LwjglEntry, wireNativesTo: String? = null) = compileOnly(entries.toList(), wireNativesTo)
+    /** @includeFile (../../../../../../kdoc_function.txt) {@set CONFIGURATION compileOnly} {@set PHRASE One or more} {@set NATIVES Configuration whose name natives are added to.} */
+    fun compileOnly(vararg entries: LwjglEntry, wireNativesTo: Named) = compileOnly(entries.toList(), wireNativesTo)
+
+    /** @includeFile (../../../../../../kdoc_function.txt) {@set CONFIGURATION testCompileOnly} {@set PHRASE A collection of} {@set NATIVES Target configuration for natives, or null to disable them.} */
+    fun testCompileOnly(entries: Iterable<LwjglEntry>, wireNativesTo: String? = null) = addModules("testCompileOnly", wireNativesTo, entries)
+    /** @includeFile (../../../../../../kdoc_function.txt) {@set CONFIGURATION testCompileOnly} {@set PHRASE A collection of} {@set NATIVES Configuration whose name natives are added to.} */
+    fun testCompileOnly(entries: Iterable<LwjglEntry>, wireNativesTo: Named) = testCompileOnly(entries, wireNativesTo.name)
+    /** @includeFile (../../../../../../kdoc_function.txt) {@set CONFIGURATION testCompileOnly} {@set PHRASE One or more} {@set NATIVES Target configuration for natives, or null to disable them.} */
+    fun testCompileOnly(vararg entries: LwjglEntry, wireNativesTo: String? = null) = testCompileOnly(entries.toList(), wireNativesTo)
+    /** @includeFile (../../../../../../kdoc_function.txt) {@set CONFIGURATION testCompileOnly} {@set PHRASE One or more} {@set NATIVES Configuration whose name natives are added to.} */
+    fun testCompileOnly(vararg entries: LwjglEntry, wireNativesTo: Named) = testCompileOnly(entries.toList(), wireNativesTo)
+
+    /** @includeFile (../../../../../../kdoc_runtime_function.txt) {@set CONFIGURATION runtimeOnly} {@set PHRASE A collection of} */
+    fun runtimeOnly(entries: Iterable<LwjglEntry>) = addModules(null, "runtimeOnly", entries)
+    /** @includeFile (../../../../../../kdoc_runtime_function.txt) {@set CONFIGURATION runtimeOnly} {@set PHRASE One or more} */
+    fun runtimeOnly(vararg entries: LwjglEntry) = runtimeOnly(entries.toList())
+
+    /** @includeFile (../../../../../../kdoc_runtime_function.txt) {@set CONFIGURATION testRuntimeOnly} {@set PHRASE A collection of} */
+    fun testRuntimeOnly(entries: Iterable<LwjglEntry>) = addModules(null, "testRuntimeOnly", entries)
+    /** @includeFile (../../../../../../kdoc_runtime_function.txt) {@set CONFIGURATION testRuntimeOnly} {@set PHRASE One or more} */
+    fun testRuntimeOnly(vararg entries: LwjglEntry) = testRuntimeOnly(entries.toList())
+
+    /** @includeFile (../../../../../../kdoc_into_function.txt) {@set PHRASE A collection of} */
+    fun into(compileConfiguration: String?, runtimeConfiguration: String?, entries: Iterable<LwjglEntry>) = addModules(compileConfiguration, runtimeConfiguration, entries)
+    /** @includeFile (../../../../../../kdoc_into_function.txt) {@set PHRASE A collection of} */
+    fun into(compileConfiguration: Named?, runtimeConfiguration: String?, entries: Iterable<LwjglEntry>) = into(compileConfiguration?.name, runtimeConfiguration, entries)
+    /** @includeFile (../../../../../../kdoc_into_function.txt) {@set PHRASE A collection of} */
+    fun into(compileConfiguration: String?, runtimeConfiguration: Named?, entries: Iterable<LwjglEntry>) = into(compileConfiguration, runtimeConfiguration?.name, entries)
+    /** @includeFile (../../../../../../kdoc_into_function.txt) {@set PHRASE A collection of} */
+    fun into(compileConfiguration: Named?, runtimeConfiguration: Named?, entries: Iterable<LwjglEntry>) = into(compileConfiguration?.name, runtimeConfiguration?.name, entries)
+
+    /** @includeFile (../../../../../../kdoc_into_function.txt) {@set PHRASE One or more} */
+    fun into(compileConfiguration: String?, runtimeConfiguration: String?, vararg entries: LwjglEntry) = into(compileConfiguration, runtimeConfiguration, entries.toList())
+    /** @includeFile (../../../../../../kdoc_into_function.txt) {@set PHRASE One or more} */
+    fun into(compileConfiguration: Named?, runtimeConfiguration: String?, vararg entries: LwjglEntry) = into(compileConfiguration?.name, runtimeConfiguration, entries.toList())
+    /** @includeFile (../../../../../../kdoc_into_function.txt) {@set PHRASE One or more} */
+    fun into(compileConfiguration: String?, runtimeConfiguration: Named?, vararg entries: LwjglEntry) = into(compileConfiguration, runtimeConfiguration?.name, entries.toList())
+    /** @includeFile (../../../../../../kdoc_into_function.txt) {@set PHRASE One or more} */
+    fun into(compileConfiguration: Named?, runtimeConfiguration: Named?, vararg entries: LwjglEntry) = into(compileConfiguration?.name, runtimeConfiguration?.name, entries.toList())
+
+    private var snapshotRepositoryAdded = false
+
+    private fun addModules(compileConfig: String?, runtimeConfig: String?, modules: Iterable<LwjglEntry>) {
         val lwjglVersion = version.get()
         val lwjglComparableVersion = ComparableVersion(lwjglVersion)
         val usePredefinedPlatformList = usePredefinedPlatforms.get()
         var resolvedRunningPlatform: String? = null
         val resolvedPlatforms: List<String> = platforms.get()
-        fun addModule(test: Boolean, module: Module) {
+        if (!snapshotRepositoryAdded && autoAddSnapshotRepository.get() && lwjglVersion.endsWith("-SNAPSHOT")) {
+            snapshotRepositoryAdded = true
+            repositories.maven(snapshotRepositoryUrl.get()) {
+                name = snapshotRepositoryName.get()
+                mavenContent {
+                    snapshotsOnly()
+                    includeGroup("org.lwjgl")
+                }
+            }
+        }
+        fun addModule(module: Module) {
             if (lwjglComparableVersion < ComparableVersion(module.since)) return
+            if (compileConfig != null) dependencies.add(compileConfig, "$GROUP:${module.artifact}:$lwjglVersion")
 
-            val implementation = if (test) "testImplementation" else "implementation"
-            dependencies.add(implementation, "$GROUP:${module.artifact}:$lwjglVersion")
-
+            if (runtimeConfig.isNullOrBlank()) return
             val nativesVersion = if (lwjglComparableVersion > ComparableVersion(CURRENT_LATEST_VERSION)) CURRENT_LATEST_VERSION else lwjglVersion
-            if (module.versionToNatives[nativesVersion].isNullOrEmpty()) return
-            val runtimeOnly = if (test) "testRuntimeOnly" else "runtimeOnly"
+            val natives = module.versionToNatives[nativesVersion]
+            if (natives.isNullOrEmpty()) return
             if (usePredefinedPlatformList) {
                 for (platform in resolvedPlatforms) {
-                    if (platform !in module.versionToNatives.getOrDefault(nativesVersion, emptyList())) continue
-                    dependencies.add(runtimeOnly, "$GROUP:${module.artifact}:$lwjglVersion:natives-$platform")
+                    if (platform !in natives) continue
+                    dependencies.add(runtimeConfig, "$GROUP:${module.artifact}:$lwjglVersion:natives-$platform")
                 }
             } else {
                 if (resolvedRunningPlatform == null) resolvedRunningPlatform = runningPlatform.get()
-                if (resolvedRunningPlatform !in module.versionToNatives.getOrDefault(nativesVersion, emptyList())) return
-                dependencies.add(runtimeOnly, "$GROUP:${module.artifact}:$lwjglVersion:natives-$resolvedRunningPlatform")
+                if (resolvedRunningPlatform !in natives) return
+                dependencies.add(runtimeConfig, "$GROUP:${module.artifact}:$lwjglVersion:natives-$resolvedRunningPlatform")
             }
         }
-        if (Module.CORE !in modules) addModule(test, Module.CORE)
-        modules.distinct().forEach { addModule(test, it) }
+        val moduleList = arrayListOf<Module>()
+        modules.distinct().forEach {
+            when(it) {
+                is Module -> moduleList.add(it)
+                is Preset -> it.modules.forEach { module -> moduleList.add(module) }
+            }
+        }
+        if (Module.CORE !in moduleList) addModule(Module.CORE)
+        moduleList.distinct().forEach { addModule(it) }
     }
 }

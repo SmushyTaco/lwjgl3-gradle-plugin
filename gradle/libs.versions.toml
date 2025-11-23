@@ -9,6 +9,8 @@ dokka = "2.1.0"
 yumiGradleLicenser = "2.2.1"
 # Check this on https://plugins.gradle.org/plugin/com.gradle.plugin-publish/
 gradlePluginPublish = "2.0.0"
+# Check this on https://plugins.gradle.org/plugin/nl.jolanrensen.kodex/
+kodex = "0.5.0"
 ##########################################################################
 # Java Configuration
 # The Java version the JDK will be for compiling and running code.
@@ -45,3 +47,4 @@ kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 yumiGradleLicenser = { id = "dev.yumi.gradle.licenser", version.ref = "yumiGradleLicenser" }
 gradlePluginPublish = { id = "com.gradle.plugin-publish", version.ref = "gradlePluginPublish" }
+kodex = { id = "nl.jolanrensen.kodex", version.ref = "kodex" }

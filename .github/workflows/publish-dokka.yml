@@ -33,6 +33,9 @@ jobs:
       - name: Make Gradle wrapper executable
         run: chmod +x gradlew
 
+      - name: Build Plugin
+        run: ./gradlew :plugin:build
+
       - name: Build Dokka HTML
         run: ./gradlew :plugin:dokkaGenerateHtml
 

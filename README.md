@@ -8,63 +8,88 @@
 ## 🚀 TL;DR (Quick Start)
 
 ```kotlin
+import com.smushytaco.lwjgl_gradle.Preset
+
 plugins {
     id("com.smushytaco.lwjgl3") version "1.0.0"
 }
 
-repositories { mavenCentral() }
+repositories {
+    mavenCentral()
+}
 
 lwjgl {
-    version = "3.3.6"                   // LWJGL version (explicitly set this!)
-    implementation(Preset.EVERYTHING)   // Add all LWJGL modules + correct natives
+    // Strongly recommended: set LWJGL version explicitly
+    version = "3.3.6"
+
+    // Add all LWJGL modules + the correct native artifacts
+    implementation(Preset.EVERYTHING)
 }
 ```
 
-That's it.  
-All required Java + native LWJGL artifacts are added automatically.
+That’s it.  
+All required **Java artifacts** and the correct **native artifacts** are added automatically.
 
-To include **all native platforms**, not just your host machine:
+To pull **all supported native platforms**, not just the current host:
 
 ```kotlin
-lwjgl { usePredefinedPlatforms = true }
+lwjgl {
+    usePredefinedPlatforms = true
+}
 ```
 
 ---
 
-# LWJGL3 Dependency Helper
+## 💡 What this plugin solves
 
-Managing LWJGL3 dependencies manually can be painful. This plugin fully automates the process, including:
+Managing LWJGL3 by hand is a mess:
 
-- adding all required Java artifacts
-- adding the correct native artifacts
-- selecting natives based on your OS or a custom platform list
-- supporting presets and individual modules
-- handling version compatibility automatically
+- dozens of modules
+- different native classifiers per OS / arch
+- modules that gained natives in later versions
+- new platforms only supported in newer LWJGL releases
+- “does this native even exist for *this* version?”
+
+This plugin handles all of that for you:
+
+- ✅ Adds **core + selected modules** automatically
+- ✅ Wires **natives** for the right platforms
+- ✅ Skips modules that don’t exist in your LWJGL version
+- ✅ Skips natives that don’t exist for that module/version
+- ✅ Supports **presets** and **individual modules**
+- ✅ Works with **all common Gradle configurations**
+- ✅ Is **configuration-cache friendly**
 
 ---
 
-## ❌ Without this plugin (manual approach)
+## ❌ Without this plugin (manual pain)
 
 ```kotlin
 val lwjglVersion = "3.3.6"
-val lwjglNatives = "natives-linux"
+val lwjglNatives = "natives-linux" // or macos, windows, etc.
 
-repositories { mavenCentral() }
+repositories {
+    mavenCentral()
+}
 
 dependencies {
+    // BOM + modules
     implementation(platform("org.lwjgl:lwjgl-bom:$lwjglVersion"))
 
     implementation("org.lwjgl", "lwjgl")
     implementation("org.lwjgl", "lwjgl-assimp")
     implementation("org.lwjgl", "lwjgl-bgfx")
     // ...
+
+    // Natives for each module
     runtimeOnly("org.lwjgl", "lwjgl", classifier = lwjglNatives)
     runtimeOnly("org.lwjgl", "lwjgl-assimp", classifier = lwjglNatives)
+    runtimeOnly("org.lwjgl", "lwjgl-bgfx", classifier = lwjglNatives)
     // ...
 }
 ```
 
-This quickly becomes hundreds of lines if you need every module and every native.
+This explodes into **hundreds of lines** if you want everything and multiple platforms.
 
 ---
 
@@ -77,7 +102,9 @@ plugins {
     id("com.smushytaco.lwjgl3") version "1.0.0"
 }
 
-repositories { mavenCentral() }
+repositories {
+    mavenCentral()
+}
 
 lwjgl {
     version = "3.3.6"
@@ -85,109 +112,366 @@ lwjgl {
 }
 ```
 
-That’s it.  
-All Java dependencies and the correct natives are automatically added.
+- All Java dependencies are added.
+- All appropriate natives are added.
+- Non-existent natives for that version are skipped.
 
 ---
 
-## Native Handling
+## 🔢 LWJGL Versions
 
-- **Default:** only host OS natives are included
-- **Enable all:**
-  ```kotlin
-  lwjgl { usePredefinedPlatforms = true }
-  ```
+### Default version
 
-You can also override the platform list:
+By default, the plugin uses:
+
+```text
+3.3.6
+```
+
+### Explicit version (recommended)
+
+Always set the version explicitly so it’s obvious what you’re targeting:
 
 ```kotlin
 lwjgl {
-    platforms = listOf("linux", "macos", "windows", "windows-x86", "windows-arm64", "linux-riscv64")
+    version = "3.3.3"
 }
 ```
 
----
-
-## LWJGL Versions
-
-The default LWJGL version is **3.3.6**.
-
-It is **strongly recommended** that you explicitly set the version:
-
-```kotlin
-lwjgl { version = "3.3.3" }
-```
+The plugin uses Maven’s version comparison logic under the hood and knows which modules / natives exist at which versions. Modules whose `since` version is **newer** than your configured version are simply skipped.
 
 ### Snapshot versions
 
 ```kotlin
-import com.smushytaco.lwjgl_gradle.mavenCentralSnapshots
-
-repositories {
-    mavenCentral()
-    mavenCentralSnapshots()
+lwjgl {
+    version = "3.4.0-SNAPSHOT"
 }
-lwjgl { version = "3.4.0-SNAPSHOT" }
 ```
+
+For versions ending in `-SNAPSHOT`:
+
+- By default, the plugin **automatically adds** a Maven snapshots repository:
+    - URL: `https://central.sonatype.com/repository/maven-snapshots/`
+    - Name: `mavenCentralSnapshots`
+- The repository is restricted to:
+    - **snapshots only**, and
+    - the **`org.lwjgl` group**.
+
+You can customize or disable this behavior:
+
+```kotlin
+lwjgl {
+    // Turn off automatic snapshot repo registration
+    autoAddSnapshotRepository = false
+
+    // Or customize it
+    snapshotRepositoryUrl = "https://example.com/maven-snapshots/"
+    snapshotRepositoryName = "myCustomSnapshots"
+}
+```
+
+> The snapshots repo is added lazily the first time you call an LWJGL DSL function  
+> (`implementation`, `api`, `into`, etc.) while using a snapshot version.
 
 ---
 
-## Selecting Modules
+## 🧱 Modules & Presets
+
+The plugin uses a **sealed interface**:
+
+```kotlin
+sealed interface LwjglEntry
+```
+
+Implemented by:
+
+- `Module` — individual LWJGL modules
+- `Preset` — named bundles of modules (e.g. “minimal OpenGL”, “everything”)
+
+Every DSL entry point (e.g. `implementation`, `api`, `testImplementation`, `into`) accepts **`LwjglEntry` varargs or iterables**, so you can mix modules and presets freely.
+
+### Selecting individual modules
 
 ```kotlin
 import com.smushytaco.lwjgl_gradle.Module
 
 lwjgl {
     implementation(
-        Module.ASSIMP,
-        Module.BGFX,
+        Module.CORE,     // added automatically if omitted, but allowed explicitly
         Module.GLFW,
-        Module.OPENAL,
         Module.OPENGL,
+        Module.OPENAL,
         Module.VULKAN
     )
 }
 ```
 
-`Module.CORE` is always added automatically.
+> `Module.CORE` is always added automatically if not present in the set.  
+> You never need to remember to add it manually.
 
----
-
-## Using LWJGL in tests
+### Using presets
 
 ```kotlin
-lwjgl { testImplementation(Preset.EVERYTHING) }
+import com.smushytaco.lwjgl_gradle.Preset
+
+lwjgl {
+    implementation(
+        Preset.MINIMAL_OPENGL
+    )
+}
 ```
 
----
+### Mixing presets and modules
 
-## Preset + module mix
+Since both `Module` and `Preset` implement `LwjglEntry`, you can mix them directly:
 
 ```kotlin
+import com.smushytaco.lwjgl_gradle.Module
+import com.smushytaco.lwjgl_gradle.Preset
+
 lwjgl {
-    implementation(Preset.GETTING_STARTED + Module.JEMALLOC)
+    implementation(
+        Preset.GETTING_STARTED,
+        Module.JEMALLOC,
+        Module.STB
+    )
 }
 ```
 
 ---
 
-## How the plugin works
+## 🌍 Native Handling
 
-The `Module` enum is **generated** using a separate codegen project.  
-It contains *every LWJGL module*, *every version*, and *every native classifier supported* by that version.
+The plugin automatically wires **native classifiers** for each chosen module and platform.
 
-This allows the plugin to:
+### Default behavior (host-only natives)
 
-- know exactly which natives exist for each LWJGL module version
-- avoid adding non-existent natives
-- support modules that added natives later
-- support modules that gained new platforms over time
+By default, only natives for the **current host platform** are added.  
+The plugin detects:
 
-Only the correct natives for the chosen version are ever added.
-If a certain native for a certain version doesn't exist, then it's skipped.
-For example, there are FreeBSD natives in the latest LWJGL versions that didn't exist in older versions.
-To give one more example, the Vulkan module used to contain no natives and later on added macOS natives.
+- OS (`os.name`)
+- Arch (`os.arch`)
+
+and resolves to one of LWJGL’s native classifier bases, such as:
+
+- `linux`
+- `linux-arm64`
+- `macos`
+- `macos-arm64`
+- `windows`
+- `windows-x86`
+- `windows-arm64`
+- `freebsd`
+
+The `-natives` prefix is handled when adding natives so that it can be omitted here.
+
+### All known platforms
+
+To pull natives for all supported platforms at once:
+
+```kotlin
+lwjgl {
+    usePredefinedPlatforms = true
+}
+```
+
+The default `platforms` list is:
+
+```kotlin
+listOf(
+    "linux-ppc64le", "linux-riscv64", "linux-arm64", "linux-arm32", "linux",
+    "macos-arm64", "macos",
+    "windows-arm64", "windows", "windows-x86",
+    "freebsd"
+)
+```
+
+### Custom platform list
+
+You can override this list entirely:
+
+```kotlin
+lwjgl {
+    usePredefinedPlatforms = true
+
+    platforms = listOf(
+        "linux",
+        "linux-arm64",
+        "macos",
+        "windows",
+        "windows-x86",
+        "windows-arm64"
+    )
+}
+```
+
+This list corresponds to the suffix **without** the `natives-` prefix  
+(e.g. `"linux"` → `natives-linux`).
 
 ---
 
-For more detailed information, see the generated Dokka documentation.
+## ⚙️ Which configurations are supported?
+
+The extension provides helpers for all the usual configurations.
+
+All of these accept `LwjglEntry` (`Module` or `Preset`) varargs or iterables:
+
+- `implementation(...)`
+- `testImplementation(...)`
+- `api(...)`
+- `testApi(...)`
+- `compileOnly(...)`
+- `testCompileOnly(...)`
+- `runtimeOnly(...)`
+- `testRuntimeOnly(...)`
+- `into(...)` — custom configurations
+
+### Defaults for natives
+
+For each compile-time configuration, natives go to a sensible runtime configuration by default:
+
+| Compile-time helper        | Default runtime for natives |
+|----------------------------|-----------------------------|
+| `implementation(...)`      | `runtimeOnly`               |
+| `testImplementation(...)`  | `testRuntimeOnly`           |
+| `api(...)`                 | `runtimeOnly`               |
+| `testApi(...)`             | `testRuntimeOnly`           |
+| `compileOnly(...)`         | _no natives_                |
+| `testCompileOnly(...)`     | _no natives_                |
+| `runtimeOnly(...)`         | **natives only**            |
+| `testRuntimeOnly(...)`     | **natives only**            |
+
+### Overriding where natives go
+
+Every helper that wires compile-time deps has a `wireNativesTo` parameter:
+
+```kotlin
+// Default: natives to runtimeOnly
+lwjgl {
+    implementation(Module.GLFW, wireNativesTo = "runtimeOnly")
+}
+
+// Use a named configuration object
+lwjgl {
+    val myRuntime by configurations.creating
+    implementation(Module.GLFW, wireNativesTo = myRuntime)
+}
+
+// Disable natives entirely for this call
+lwjgl {
+    implementation(Module.GLFW, wireNativesTo = null)
+}
+```
+
+The same pattern applies to:
+
+- `implementation`
+- `testImplementation`
+- `api`
+- `testApi`
+- `compileOnly`
+- `testCompileOnly`
+
+---
+
+## 🎯 Custom configurations with `into`
+
+If you have custom configurations, use `into`:
+
+```kotlin
+val lwjglCompile by configurations.creating
+val lwjglRuntime by configurations.creating
+
+lwjgl {
+    into(
+        compileConfiguration = lwjglCompile,
+        runtimeConfiguration = lwjglRuntime,
+        entries = listOf(
+            Preset.MINIMAL_OPENGL,
+            Module.GLFW
+        )
+    )
+}
+```
+
+Or with varargs:
+
+```kotlin
+lwjgl {
+    into(
+        compileConfiguration = "myCompile",
+        runtimeConfiguration = "myRuntime",
+        Preset.MINIMAL_OPENGL,
+        Module.GLFW,
+        Module.OPENAL
+    )
+}
+```
+
+You can also pass `null` to skip compile-time or runtime wiring:
+
+```kotlin
+lwjgl {
+    // Only natives to "myRuntime"
+    into(
+        compileConfiguration = null,
+        runtimeConfiguration = "myRuntime",
+        Module.GLFW
+    )
+
+    // Only compile-time artifacts, no natives
+    into(
+        compileConfiguration = "myCompile",
+        runtimeConfiguration = null,
+        Module.GLFW
+    )
+}
+```
+
+---
+
+## 🧠 Version- and native-awareness
+
+The `Module` enum is **generated** by a separate codegen step and encodes:
+
+- which LWJGL versions each module exists in (`since`)
+- which native classifiers exist for each module and version
+
+At resolution time the plugin:
+
+1. **Skips modules** whose `since` version is newer than your configured `version`.
+2. Chooses the **appropriate “natives version”** (up to the latest known stable).
+3. Looks up the list of supported native classifiers for that `(module, version)`.
+4. Only wires natives that actually exist for that combination.
+
+Examples of what this gets right:
+
+- FreeBSD natives only appear once LWJGL started publishing them.
+- Vulkan natives only appear on the versions/platforms where they exist.
+- Modules that initially had no natives but gained them later are handled correctly.
+
+You never get dependencies for artifacts that don’t exist.
+
+---
+
+## 🧱 Configuration cache friendliness
+
+The plugin is written to be compatible with Gradle’s **configuration cache**:
+
+- No use of `afterEvaluate { ... }`.
+- All wiring (dependencies, repositories) happens during configuration.
+- Snapshot repository registration is lazy but still configuration-phase only.
+
+You can safely enable the configuration cache for builds using this plugin.
+
+---
+
+## 📚 Documentation
+
+Full API documentation is available via Dokka:
+
+- **Dokka docs:** https://smushytaco.github.io/lwjgl3-gradle-plugin
+- **Plugin Portal:** https://plugins.gradle.org/plugin/com.smushytaco.lwjgl3
+
+If you spot a missed module, platform, or version edge case, please open an issue or PR —  
+the codegen-backed `Module` enum makes it straightforward to keep everything perfectly in sync with LWJGL’s releases.

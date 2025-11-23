@@ -1,0 +1,12 @@
+Registers LWJGL modules on the `{@get CONFIGURATION}` configuration.
+
+The selected modules will:
+- Always include [Module.CORE] if it is not already present.
+- Respect each module’s [Module.since] version so that modules newer than
+  the configured [version] are skipped.
+- Add the appropriate native artifacts depending on
+  [usePredefinedPlatforms] and [platforms], or the inferred host platform.
+
+@param entries
+{@get PHRASE} [LwjglEntry] values to register on the
+`implementation` configuration.

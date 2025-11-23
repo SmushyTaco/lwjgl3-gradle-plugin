@@ -38,29 +38,11 @@ import com.smushytaco.lwjgl_gradle.Module.*
  * This list is consumed by the plugin when resolving dependencies.
  */
 @Suppress("unused")
-enum class Preset(val modules: List<Module>) {
+enum class Preset(val modules: List<Module>): LwjglEntry {
     NONE(emptyList()),
     EVERYTHING(Module.entries),
     GETTING_STARTED(listOf(CORE, ASSIMP, BGFX, GLFW, NANOVG, NUKLEAR, OPENAL, OPENGL, PAR, STB, VULKAN)),
     MINIMAL_OPENGL(listOf(CORE, ASSIMP, GLFW, OPENAL, OPENGL, STB)),
     MINIMAL_OPENGLES(listOf(CORE, ASSIMP, EGL, GLFW, OPENAL, OPENGLES, STB)),
     MINIMAL_VULKAN(listOf(CORE, ASSIMP, GLFW, OPENAL, STB, VULKAN));
-    /**
-     * Returns a new list containing all modules in this preset plus the given [module].
-     *
-     * This operator does **not** modify the preset itself; it simply produces
-     * an extended module list. It is useful when you want to take an existing
-     * preset and add one or more extra modules.
-     *
-     * Example:
-     * ```
-     * implementation(Preset.MINIMAL_OPENGL + Module.NFD)
-     * ```
-     *
-     * @param module
-     * The additional LWJGL [Module] to append to this preset's module list.
-     *
-     * @return A new immutable list consisting of all preset modules and the given [module].
-     */
-    operator fun plus(module: Module) = modules + module
 }

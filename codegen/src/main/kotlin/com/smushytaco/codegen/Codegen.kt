@@ -205,7 +205,7 @@ fun generateModuleEnum(metadata: List<LwjglMetadata>): String {
     )
 
     sb.appendLine("@Suppress(\"kotlin:S1192\")")
-    sb.appendLine("enum class Module(val artifact: String, val since: String, val versionToNatives: Map<String, List<String>>) {")
+    sb.appendLine("enum class Module(val artifact: String, val since: String, val versionToNatives: Map<String, List<String>>): LwjglEntry {")
 
     metadata.forEachIndexed { index, meta ->
         val name = enumNameFromArtifact(meta.artifact)

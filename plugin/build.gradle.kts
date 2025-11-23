@@ -1,5 +1,9 @@
+import nl.jolanrensen.kodex.defaultProcessors.ARG_DOC_PROCESSOR
+import nl.jolanrensen.kodex.defaultProcessors.INCLUDE_FILE_DOC_PROCESSOR
+import nl.jolanrensen.kodex.gradle.creatingRunKodexTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     `java-gradle-plugin`
     `kotlin-dsl`
@@ -8,6 +12,7 @@ plugins {
     alias(libs.plugins.dokka)
     alias(libs.plugins.yumiGradleLicenser)
     alias(libs.plugins.gradlePluginPublish)
+    alias(libs.plugins.kodex)
 }
 
 val projectName = providers.gradleProperty("name")
@@ -55,8 +60,14 @@ java {
     targetCompatibility = JavaVersion.toVersion(javaVersion.get())
     withSourcesJar()
 }
+val kotlinMainSources = kotlin.sourceSets.main.get().kotlin.sourceDirectories
+
+val processKdocMain by creatingRunKodexTask(sources = kotlinMainSources) {
+    processors = listOf(INCLUDE_FILE_DOC_PROCESSOR, ARG_DOC_PROCESSOR)
+}
 dokka {
     dokkaSourceSets.configureEach {
+        sourceRoots.setFrom(processKdocMain.target.get().toString())
         reportUndocumented = true
     }
 }
@@ -79,6 +90,9 @@ val licenseFile = run {
     }
 }
 tasks {
+    dokkaGenerateHtml {
+        dependsOn(processKdocMain)
+    }
     withType<JavaCompile>().configureEach {
         options.encoding = "UTF-8"
         sourceCompatibility = javaVersion.get().toString()
@@ -102,6 +116,25 @@ tasks {
         }
     }
     withType<Jar>().configureEach {
+        dependsOn(processKdocMain)
+        doFirst {
+            kotlin {
+                sourceSets {
+                    main {
+                        kotlin.setSrcDirs(processKdocMain.targets)
+                    }
+                }
+            }
+        }
+        doLast {
+            kotlin {
+                sourceSets {
+                    main {
+                        kotlin.setSrcDirs(kotlinMainSources)
+                    }
+                }
+            }
+        }
         licenseFile?.let {
             from(it) {
                 rename { original -> "${original}_${archiveBaseName.get()}" }

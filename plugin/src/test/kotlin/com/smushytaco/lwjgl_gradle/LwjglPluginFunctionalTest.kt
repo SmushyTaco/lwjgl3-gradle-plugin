@@ -128,7 +128,6 @@ class LwjglPluginFunctionalTest {
             // language=kotlin
             $$"""
             import com.smushytaco.lwjgl_gradle.Preset
-            import com.smushytaco.lwjgl_gradle.mavenCentralSnapshots
             
             plugins {
                 id("com.smushytaco.lwjgl3")
@@ -137,7 +136,6 @@ class LwjglPluginFunctionalTest {
 
             repositories {
                 mavenCentral()
-                mavenCentralSnapshots()
             }
 
             lwjgl {
