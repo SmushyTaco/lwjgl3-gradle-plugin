@@ -145,7 +145,7 @@ abstract class LwjglExtension @Inject constructor(objects: ObjectFactory, provid
      * instruct the user to enable [usePredefinedPlatforms] and configure
      * [platforms] explicitly.
      */
-    private val runningPlatform: Provider<String> =
+    val runningPlatform: Provider<String> =
         providers.systemProperty("os.name")
             .zip(providers.systemProperty("os.arch")) { osName, arch ->
                 val os = osName.lowercase(Locale.ROOT).trim()
@@ -321,7 +321,7 @@ abstract class LwjglExtension @Inject constructor(objects: ObjectFactory, provid
                 name = snapshotRepositoryName.get()
                 mavenContent {
                     snapshotsOnly()
-                    includeGroup("org.lwjgl")
+                    includeGroup(GROUP)
                 }
             }
         }

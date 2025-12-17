@@ -11,7 +11,7 @@
 import com.smushytaco.lwjgl_gradle.Preset
 
 plugins {
-    id("com.smushytaco.lwjgl3") version "1.0.0"
+    id("com.smushytaco.lwjgl3") version "1.0.1"
 }
 
 repositories {
@@ -99,7 +99,7 @@ This explodes into **hundreds of lines** if you want everything and multiple pla
 import com.smushytaco.lwjgl_gradle.Preset
 
 plugins {
-    id("com.smushytaco.lwjgl3") version "1.0.0"
+    id("com.smushytaco.lwjgl3") version "1.0.1"
 }
 
 repositories {
