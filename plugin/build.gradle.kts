@@ -15,13 +15,13 @@ plugins {
     alias(libs.plugins.kodex)
 }
 
-val projectName = providers.gradleProperty("name")
-val projectGroup = providers.gradleProperty("group")
-val projectVersion = providers.gradleProperty("version")
-val projectDescription = providers.gradleProperty("description")
-val projectUrl = providers.gradleProperty("url")
+val projectName: Provider<String> = providers.gradleProperty("name")
+val projectGroup: Provider<String> = providers.gradleProperty("group")
+val projectVersion: Provider<String> = providers.gradleProperty("version")
+val projectDescription: Provider<String> = providers.gradleProperty("description")
+val projectUrl: Provider<String> = providers.gradleProperty("url")
 
-val javaVersion = libs.versions.java.map { it.toInt() }
+val javaVersion: Provider<Int> = libs.versions.java.map { it.toInt() }
 
 base.archivesName = projectName
 group = projectGroup.get()
@@ -60,7 +60,7 @@ java {
     targetCompatibility = JavaVersion.toVersion(javaVersion.get())
     withSourcesJar()
 }
-val kotlinMainSources = kotlin.sourceSets.main.get().kotlin.sourceDirectories
+val kotlinMainSources: FileCollection = kotlin.sourceSets.main.get().kotlin.sourceDirectories
 
 val processKdocMain by creatingRunKodexTask(sources = kotlinMainSources) {
     processors = listOf(INCLUDE_FILE_DOC_PROCESSOR, ARG_DOC_PROCESSOR)

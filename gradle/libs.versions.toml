@@ -6,11 +6,11 @@ kotlin = "2.3.0"
 # Check this on https://github.com/Kotlin/dokka/releases/latest/
 dokka = "2.1.0"
 # Check this on https://plugins.gradle.org/plugin/dev.yumi.gradle.licenser/
-yumiGradleLicenser = "2.2.1"
+yumiGradleLicenser = "2.2.2"
 # Check this on https://plugins.gradle.org/plugin/com.gradle.plugin-publish/
 gradlePluginPublish = "2.0.0"
 # Check this on https://plugins.gradle.org/plugin/nl.jolanrensen.kodex/
-kodex = "0.5.0"
+kodex = "0.5.1"
 ##########################################################################
 # Java Configuration
 # The Java version the JDK will be for compiling and running code.

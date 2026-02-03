@@ -60,7 +60,7 @@ private fun mavenCentral(): RemoteRepository =
     ).build()
 
 private const val LWJGL_GROUP = "org.lwjgl"
-private const val LWJGL_BOM_COORD = "org.lwjgl:lwjgl-bom:3.3.6"
+private const val LWJGL_BOM_COORD = "org.lwjgl:lwjgl-bom:3.4.0"
 
 @Suppress("SameParameterValue")
 private fun parseCoords(coords: String): Triple<String, String, String> {
@@ -86,7 +86,7 @@ fun findLwjglModulesFromBom(system: RepositorySystem, session: RepositorySystemS
     doc.documentElement.normalize()
 
     val nodes = doc.getElementsByTagName("dependency")
-    val artifactIds = mutableSetOf<String>()
+    val artifactIds = mutableSetOf("lwjgl-cuda", "lwjgl-libdivide", "lwjgl-meow", "lwjgl-openvr", "lwjgl-ovr", "lwjgl-sse", "lwjgl-tootle")
 
     for (i in 0 until nodes.length) {
         val dep = nodes.item(i)

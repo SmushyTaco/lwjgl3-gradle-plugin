@@ -170,6 +170,19 @@ enum class Module(val artifact: String, val since: String, val versionToNatives:
                 "macos",
                 "macos-arm64",
                 "freebsd"
+            ),
+            "3.4.0" to listOf(
+                "windows",
+                "windows-x86",
+                "windows-arm64",
+                "linux",
+                "linux-arm64",
+                "linux-arm32",
+                "linux-ppc64le",
+                "linux-riscv64",
+                "macos",
+                "macos-arm64",
+                "freebsd"
             )
         )
     ),
@@ -297,6 +310,19 @@ enum class Module(val artifact: String, val since: String, val versionToNatives:
                 "freebsd"
             ),
             "3.3.6" to listOf(
+                "windows",
+                "windows-x86",
+                "windows-arm64",
+                "linux",
+                "linux-arm64",
+                "linux-arm32",
+                "linux-ppc64le",
+                "linux-riscv64",
+                "macos",
+                "macos-arm64",
+                "freebsd"
+            ),
+            "3.4.0" to listOf(
                 "windows",
                 "windows-x86",
                 "windows-arm64",
@@ -444,6 +470,18 @@ enum class Module(val artifact: String, val since: String, val versionToNatives:
                 "macos",
                 "macos-arm64",
                 "freebsd"
+            ),
+            "3.4.0" to listOf(
+                "windows",
+                "windows-x86",
+                "linux",
+                "linux-arm64",
+                "linux-arm32",
+                "linux-ppc64le",
+                "linux-riscv64",
+                "macos",
+                "macos-arm64",
+                "freebsd"
             )
         )
     ),
@@ -484,7 +522,8 @@ enum class Module(val artifact: String, val since: String, val versionToNatives:
             "3.3.3" to emptyList(),
             "3.3.4" to emptyList(),
             "3.3.5" to emptyList(),
-            "3.3.6" to emptyList()
+            "3.3.6" to emptyList(),
+            "3.4.0" to emptyList()
         )
     ),
     FMOD(
@@ -495,7 +534,8 @@ enum class Module(val artifact: String, val since: String, val versionToNatives:
             "3.3.3" to emptyList(),
             "3.3.4" to emptyList(),
             "3.3.5" to emptyList(),
-            "3.3.6" to emptyList()
+            "3.3.6" to emptyList(),
+            "3.4.0" to emptyList()
         )
     ),
     FREETYPE(
@@ -549,6 +589,19 @@ enum class Module(val artifact: String, val since: String, val versionToNatives:
                 "freebsd"
             ),
             "3.3.6" to listOf(
+                "windows",
+                "windows-x86",
+                "windows-arm64",
+                "linux",
+                "linux-arm64",
+                "linux-arm32",
+                "linux-ppc64le",
+                "linux-riscv64",
+                "macos",
+                "macos-arm64",
+                "freebsd"
+            ),
+            "3.4.0" to listOf(
                 "windows",
                 "windows-x86",
                 "windows-arm64",
@@ -703,6 +756,19 @@ enum class Module(val artifact: String, val since: String, val versionToNatives:
                 "macos",
                 "macos-arm64",
                 "freebsd"
+            ),
+            "3.4.0" to listOf(
+                "windows",
+                "windows-x86",
+                "windows-arm64",
+                "linux",
+                "linux-arm64",
+                "linux-arm32",
+                "linux-ppc64le",
+                "linux-riscv64",
+                "macos",
+                "macos-arm64",
+                "freebsd"
             )
         )
     ),
@@ -757,6 +823,19 @@ enum class Module(val artifact: String, val since: String, val versionToNatives:
                 "freebsd"
             ),
             "3.3.6" to listOf(
+                "windows",
+                "windows-x86",
+                "windows-arm64",
+                "linux",
+                "linux-arm64",
+                "linux-arm32",
+                "linux-ppc64le",
+                "linux-riscv64",
+                "macos",
+                "macos-arm64",
+                "freebsd"
+            ),
+            "3.4.0" to listOf(
                 "windows",
                 "windows-x86",
                 "windows-arm64",
@@ -833,6 +912,19 @@ enum class Module(val artifact: String, val since: String, val versionToNatives:
                 "macos",
                 "macos-arm64",
                 "freebsd"
+            ),
+            "3.4.0" to listOf(
+                "windows",
+                "windows-x86",
+                "windows-arm64",
+                "linux",
+                "linux-arm64",
+                "linux-arm32",
+                "linux-ppc64le",
+                "linux-riscv64",
+                "macos",
+                "macos-arm64",
+                "freebsd"
             )
         )
     ),
@@ -857,7 +949,8 @@ enum class Module(val artifact: String, val since: String, val versionToNatives:
             "3.3.3" to emptyList(),
             "3.3.4" to emptyList(),
             "3.3.5" to emptyList(),
-            "3.3.6" to emptyList()
+            "3.3.6" to emptyList(),
+            "3.4.0" to emptyList()
         )
     ),
     JEMALLOC(
@@ -1000,6 +1093,19 @@ enum class Module(val artifact: String, val since: String, val versionToNatives:
                 "macos",
                 "macos-arm64",
                 "freebsd"
+            ),
+            "3.4.0" to listOf(
+                "windows",
+                "windows-x86",
+                "windows-arm64",
+                "linux",
+                "linux-arm64",
+                "linux-arm32",
+                "linux-ppc64le",
+                "linux-riscv64",
+                "macos",
+                "macos-arm64",
+                "freebsd"
             )
         )
     ),
@@ -1051,6 +1157,18 @@ enum class Module(val artifact: String, val since: String, val versionToNatives:
                 "freebsd"
             ),
             "3.3.6" to listOf(
+                "windows",
+                "windows-arm64",
+                "linux",
+                "linux-arm64",
+                "linux-arm32",
+                "linux-ppc64le",
+                "linux-riscv64",
+                "macos",
+                "macos-arm64",
+                "freebsd"
+            ),
+            "3.4.0" to listOf(
                 "windows",
                 "windows-arm64",
                 "linux",
@@ -1267,6 +1385,19 @@ enum class Module(val artifact: String, val since: String, val versionToNatives:
                 "macos",
                 "macos-arm64",
                 "freebsd"
+            ),
+            "3.4.0" to listOf(
+                "windows",
+                "windows-x86",
+                "windows-arm64",
+                "linux",
+                "linux-arm64",
+                "linux-arm32",
+                "linux-ppc64le",
+                "linux-riscv64",
+                "macos",
+                "macos-arm64",
+                "freebsd"
             )
         )
     ),
@@ -1410,6 +1541,19 @@ enum class Module(val artifact: String, val since: String, val versionToNatives:
                 "macos",
                 "macos-arm64",
                 "freebsd"
+            ),
+            "3.4.0" to listOf(
+                "windows",
+                "windows-x86",
+                "windows-arm64",
+                "linux",
+                "linux-arm64",
+                "linux-arm32",
+                "linux-ppc64le",
+                "linux-riscv64",
+                "macos",
+                "macos-arm64",
+                "freebsd"
             )
         )
     ),
@@ -1522,6 +1666,19 @@ enum class Module(val artifact: String, val since: String, val versionToNatives:
                 "freebsd"
             ),
             "3.3.6" to listOf(
+                "windows",
+                "windows-x86",
+                "windows-arm64",
+                "linux",
+                "linux-arm64",
+                "linux-arm32",
+                "linux-ppc64le",
+                "linux-riscv64",
+                "macos",
+                "macos-arm64",
+                "freebsd"
+            ),
+            "3.4.0" to listOf(
                 "windows",
                 "windows-x86",
                 "windows-arm64",
@@ -1707,6 +1864,19 @@ enum class Module(val artifact: String, val since: String, val versionToNatives:
                 "macos",
                 "macos-arm64",
                 "freebsd"
+            ),
+            "3.4.0" to listOf(
+                "windows",
+                "windows-x86",
+                "windows-arm64",
+                "linux",
+                "linux-arm64",
+                "linux-arm32",
+                "linux-ppc64le",
+                "linux-riscv64",
+                "macos",
+                "macos-arm64",
+                "freebsd"
             )
         )
     ),
@@ -1741,6 +1911,19 @@ enum class Module(val artifact: String, val since: String, val versionToNatives:
                 "freebsd"
             ),
             "3.3.6" to listOf(
+                "windows",
+                "windows-x86",
+                "windows-arm64",
+                "linux",
+                "linux-arm64",
+                "linux-arm32",
+                "linux-ppc64le",
+                "linux-riscv64",
+                "macos",
+                "macos-arm64",
+                "freebsd"
+            ),
+            "3.4.0" to listOf(
                 "windows",
                 "windows-x86",
                 "windows-arm64",
@@ -1895,6 +2078,19 @@ enum class Module(val artifact: String, val since: String, val versionToNatives:
                 "macos",
                 "macos-arm64",
                 "freebsd"
+            ),
+            "3.4.0" to listOf(
+                "windows",
+                "windows-x86",
+                "windows-arm64",
+                "linux",
+                "linux-arm64",
+                "linux-arm32",
+                "linux-ppc64le",
+                "linux-riscv64",
+                "macos",
+                "macos-arm64",
+                "freebsd"
             )
         )
     ),
@@ -2025,6 +2221,19 @@ enum class Module(val artifact: String, val since: String, val versionToNatives:
                 "freebsd"
             ),
             "3.3.6" to listOf(
+                "windows",
+                "windows-x86",
+                "windows-arm64",
+                "linux",
+                "linux-arm64",
+                "linux-arm32",
+                "linux-ppc64le",
+                "linux-riscv64",
+                "macos",
+                "macos-arm64",
+                "freebsd"
+            ),
+            "3.4.0" to listOf(
                 "windows",
                 "windows-x86",
                 "windows-arm64",
@@ -2179,6 +2388,19 @@ enum class Module(val artifact: String, val since: String, val versionToNatives:
                 "macos",
                 "macos-arm64",
                 "freebsd"
+            ),
+            "3.4.0" to listOf(
+                "windows",
+                "windows-x86",
+                "windows-arm64",
+                "linux",
+                "linux-arm64",
+                "linux-arm32",
+                "linux-ppc64le",
+                "linux-riscv64",
+                "macos",
+                "macos-arm64",
+                "freebsd"
             )
         )
     ),
@@ -2199,7 +2421,8 @@ enum class Module(val artifact: String, val since: String, val versionToNatives:
             "3.3.3" to emptyList(),
             "3.3.4" to emptyList(),
             "3.3.5" to emptyList(),
-            "3.3.6" to emptyList()
+            "3.3.6" to emptyList(),
+            "3.4.0" to emptyList()
         )
     ),
     OPENAL(
@@ -2342,6 +2565,19 @@ enum class Module(val artifact: String, val since: String, val versionToNatives:
                 "macos",
                 "macos-arm64",
                 "freebsd"
+            ),
+            "3.4.0" to listOf(
+                "windows",
+                "windows-x86",
+                "windows-arm64",
+                "linux",
+                "linux-arm64",
+                "linux-arm32",
+                "linux-ppc64le",
+                "linux-riscv64",
+                "macos",
+                "macos-arm64",
+                "freebsd"
             )
         )
     ),
@@ -2366,7 +2602,8 @@ enum class Module(val artifact: String, val since: String, val versionToNatives:
             "3.3.3" to emptyList(),
             "3.3.4" to emptyList(),
             "3.3.5" to emptyList(),
-            "3.3.6" to emptyList()
+            "3.3.6" to emptyList(),
+            "3.4.0" to emptyList()
         )
     ),
     OPENGL(
@@ -2494,6 +2731,19 @@ enum class Module(val artifact: String, val since: String, val versionToNatives:
                 "freebsd"
             ),
             "3.3.6" to listOf(
+                "windows",
+                "windows-x86",
+                "windows-arm64",
+                "linux",
+                "linux-arm64",
+                "linux-arm32",
+                "linux-ppc64le",
+                "linux-riscv64",
+                "macos",
+                "macos-arm64",
+                "freebsd"
+            ),
+            "3.4.0" to listOf(
                 "windows",
                 "windows-x86",
                 "windows-arm64",
@@ -2633,6 +2883,19 @@ enum class Module(val artifact: String, val since: String, val versionToNatives:
                 "freebsd"
             ),
             "3.3.6" to listOf(
+                "windows",
+                "windows-x86",
+                "windows-arm64",
+                "linux",
+                "linux-arm64",
+                "linux-arm32",
+                "linux-ppc64le",
+                "linux-riscv64",
+                "macos",
+                "macos-arm64",
+                "freebsd"
+            ),
+            "3.4.0" to listOf(
                 "windows",
                 "windows-x86",
                 "windows-arm64",
@@ -2804,6 +3067,17 @@ enum class Module(val artifact: String, val since: String, val versionToNatives:
                 "linux-ppc64le",
                 "linux-riscv64",
                 "freebsd"
+            ),
+            "3.4.0" to listOf(
+                "windows",
+                "windows-x86",
+                "windows-arm64",
+                "linux",
+                "linux-arm64",
+                "linux-arm32",
+                "linux-ppc64le",
+                "linux-riscv64",
+                "freebsd"
             )
         )
     ),
@@ -2896,6 +3170,19 @@ enum class Module(val artifact: String, val since: String, val versionToNatives:
                 "freebsd"
             ),
             "3.3.6" to listOf(
+                "windows",
+                "windows-x86",
+                "windows-arm64",
+                "linux",
+                "linux-arm64",
+                "linux-arm32",
+                "linux-ppc64le",
+                "linux-riscv64",
+                "macos",
+                "macos-arm64",
+                "freebsd"
+            ),
+            "3.4.0" to listOf(
                 "windows",
                 "windows-x86",
                 "windows-arm64",
@@ -3118,6 +3405,19 @@ enum class Module(val artifact: String, val since: String, val versionToNatives:
                 "macos",
                 "macos-arm64",
                 "freebsd"
+            ),
+            "3.4.0" to listOf(
+                "windows",
+                "windows-x86",
+                "windows-arm64",
+                "linux",
+                "linux-arm64",
+                "linux-arm32",
+                "linux-ppc64le",
+                "linux-riscv64",
+                "macos",
+                "macos-arm64",
+                "freebsd"
             )
         )
     ),
@@ -3234,7 +3534,26 @@ enum class Module(val artifact: String, val since: String, val versionToNatives:
                 "macos",
                 "macos-arm64",
                 "freebsd"
+            ),
+            "3.4.0" to listOf(
+                "windows",
+                "windows-x86",
+                "linux",
+                "linux-arm64",
+                "linux-arm32",
+                "linux-ppc64le",
+                "linux-riscv64",
+                "macos",
+                "macos-arm64",
+                "freebsd"
             )
+        )
+    ),
+    RENDERDOC(
+        "lwjgl-renderdoc",
+        "3.4.0",
+        mapOf(
+            "3.4.0" to emptyList()
         )
     ),
     RPMALLOC(
@@ -3362,6 +3681,38 @@ enum class Module(val artifact: String, val since: String, val versionToNatives:
                 "macos",
                 "macos-arm64",
                 "freebsd"
+            ),
+            "3.4.0" to listOf(
+                "windows",
+                "windows-x86",
+                "windows-arm64",
+                "linux",
+                "linux-arm64",
+                "linux-arm32",
+                "linux-ppc64le",
+                "linux-riscv64",
+                "macos",
+                "macos-arm64",
+                "freebsd"
+            )
+        )
+    ),
+    SDL(
+        "lwjgl-sdl",
+        "3.4.0",
+        mapOf(
+            "3.4.0" to listOf(
+                "windows",
+                "windows-x86",
+                "windows-arm64",
+                "linux",
+                "linux-arm64",
+                "linux-arm32",
+                "linux-ppc64le",
+                "linux-riscv64",
+                "macos",
+                "macos-arm64",
+                "freebsd"
             )
         )
     ),
@@ -3455,6 +3806,38 @@ enum class Module(val artifact: String, val since: String, val versionToNatives:
                 "macos",
                 "macos-arm64",
                 "freebsd"
+            ),
+            "3.4.0" to listOf(
+                "windows",
+                "windows-x86",
+                "windows-arm64",
+                "linux",
+                "linux-arm64",
+                "linux-arm32",
+                "linux-ppc64le",
+                "linux-riscv64",
+                "macos",
+                "macos-arm64",
+                "freebsd"
+            )
+        )
+    ),
+    SPNG(
+        "lwjgl-spng",
+        "3.4.0",
+        mapOf(
+            "3.4.0" to listOf(
+                "windows",
+                "windows-x86",
+                "windows-arm64",
+                "linux",
+                "linux-arm64",
+                "linux-arm32",
+                "linux-ppc64le",
+                "linux-riscv64",
+                "macos",
+                "macos-arm64",
+                "freebsd"
             )
         )
     ),
@@ -3529,6 +3912,19 @@ enum class Module(val artifact: String, val since: String, val versionToNatives:
                 "freebsd"
             ),
             "3.3.6" to listOf(
+                "windows",
+                "windows-x86",
+                "windows-arm64",
+                "linux",
+                "linux-arm64",
+                "linux-arm32",
+                "linux-ppc64le",
+                "linux-riscv64",
+                "macos",
+                "macos-arm64",
+                "freebsd"
+            ),
+            "3.4.0" to listOf(
                 "windows",
                 "windows-x86",
                 "windows-arm64",
@@ -3790,6 +4186,19 @@ enum class Module(val artifact: String, val since: String, val versionToNatives:
                 "macos",
                 "macos-arm64",
                 "freebsd"
+            ),
+            "3.4.0" to listOf(
+                "windows",
+                "windows-x86",
+                "windows-arm64",
+                "linux",
+                "linux-arm64",
+                "linux-arm32",
+                "linux-ppc64le",
+                "linux-riscv64",
+                "macos",
+                "macos-arm64",
+                "freebsd"
             )
         )
     ),
@@ -3912,6 +4321,19 @@ enum class Module(val artifact: String, val since: String, val versionToNatives:
                 "freebsd"
             ),
             "3.3.6" to listOf(
+                "windows",
+                "windows-x86",
+                "windows-arm64",
+                "linux",
+                "linux-arm64",
+                "linux-arm32",
+                "linux-ppc64le",
+                "linux-riscv64",
+                "macos",
+                "macos-arm64",
+                "freebsd"
+            ),
+            "3.4.0" to listOf(
                 "windows",
                 "windows-x86",
                 "windows-arm64",
@@ -4055,6 +4477,19 @@ enum class Module(val artifact: String, val since: String, val versionToNatives:
                 "freebsd"
             ),
             "3.3.6" to listOf(
+                "windows",
+                "windows-x86",
+                "windows-arm64",
+                "linux",
+                "linux-arm64",
+                "linux-arm32",
+                "linux-ppc64le",
+                "linux-riscv64",
+                "macos",
+                "macos-arm64",
+                "freebsd"
+            ),
+            "3.4.0" to listOf(
                 "windows",
                 "windows-x86",
                 "windows-arm64",
@@ -4256,6 +4691,19 @@ enum class Module(val artifact: String, val since: String, val versionToNatives:
                 "macos",
                 "macos-arm64",
                 "freebsd"
+            ),
+            "3.4.0" to listOf(
+                "windows",
+                "windows-x86",
+                "windows-arm64",
+                "linux",
+                "linux-arm64",
+                "linux-arm32",
+                "linux-ppc64le",
+                "linux-riscv64",
+                "macos",
+                "macos-arm64",
+                "freebsd"
             )
         )
     ),
@@ -4307,6 +4755,10 @@ enum class Module(val artifact: String, val since: String, val versionToNatives:
                 "macos-arm64"
             ),
             "3.3.6" to listOf(
+                "macos",
+                "macos-arm64"
+            ),
+            "3.4.0" to listOf(
                 "macos",
                 "macos-arm64"
             )
@@ -4452,6 +4904,19 @@ enum class Module(val artifact: String, val since: String, val versionToNatives:
                 "macos",
                 "macos-arm64",
                 "freebsd"
+            ),
+            "3.4.0" to listOf(
+                "windows",
+                "windows-x86",
+                "windows-arm64",
+                "linux",
+                "linux-arm64",
+                "linux-arm32",
+                "linux-ppc64le",
+                "linux-riscv64",
+                "macos",
+                "macos-arm64",
+                "freebsd"
             )
         )
     ),
@@ -4585,6 +5050,19 @@ enum class Module(val artifact: String, val since: String, val versionToNatives:
                 "macos",
                 "macos-arm64",
                 "freebsd"
+            ),
+            "3.4.0" to listOf(
+                "windows",
+                "windows-x86",
+                "windows-arm64",
+                "linux",
+                "linux-arm64",
+                "linux-arm32",
+                "linux-ppc64le",
+                "linux-riscv64",
+                "macos",
+                "macos-arm64",
+                "freebsd"
             )
         )
     ),
@@ -4697,6 +5175,19 @@ enum class Module(val artifact: String, val since: String, val versionToNatives:
                 "freebsd"
             ),
             "3.3.6" to listOf(
+                "windows",
+                "windows-x86",
+                "windows-arm64",
+                "linux",
+                "linux-arm64",
+                "linux-arm32",
+                "linux-ppc64le",
+                "linux-riscv64",
+                "macos",
+                "macos-arm64",
+                "freebsd"
+            ),
+            "3.4.0" to listOf(
                 "windows",
                 "windows-x86",
                 "windows-arm64",

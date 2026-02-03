@@ -34,7 +34,7 @@ import org.gradle.api.Project
  * }
  *
  * lwjgl {
- *     version = "3.3.6"
+ *     version = "3.4.0"
  *     implementation(Preset.MINIMAL_OPENGL)
  * }
  * ```
