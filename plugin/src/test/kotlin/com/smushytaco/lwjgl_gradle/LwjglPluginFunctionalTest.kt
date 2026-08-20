@@ -43,7 +43,7 @@ class LwjglPluginFunctionalTest {
             }
 
             lwjgl {
-                version = "3.4.0"
+                version = "3.4.2"
                 implementation(Preset.MINIMAL_OPENGL)
             }
             """.trimIndent()
@@ -139,7 +139,7 @@ class LwjglPluginFunctionalTest {
             }
 
             lwjgl {
-                version = "3.4.1-SNAPSHOT"
+                version = "3.4.3-SNAPSHOT"
                 implementation(Preset.MINIMAL_OPENGL)
             }
             abstract class PrintArtifactsTask @Inject constructor() : DefaultTask() {
@@ -166,6 +166,6 @@ class LwjglPluginFunctionalTest {
             .forwardOutput()
             .build()
 
-        assertTrue(result.output.contains("lwjgl-assimp-3.4.1-SNAPSHOT"))
+        assertTrue(result.output.contains("lwjgl-assimp-3.4.3-SNAPSHOT"))
     }
 }

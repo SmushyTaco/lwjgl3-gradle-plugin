@@ -103,6 +103,7 @@ tasks {
     withType<Javadoc>().configureEach { options.encoding = "UTF-8" }
     withType<Test>().configureEach { defaultCharacterEncoding = "UTF-8" }
     register<Jar>("dokkaJar") {
+        description = "Generates a dokka jar."
         group = JavaBasePlugin.DOCUMENTATION_GROUP
         dependsOn(dokkaGenerateHtml)
         archiveClassifier = "javadoc"

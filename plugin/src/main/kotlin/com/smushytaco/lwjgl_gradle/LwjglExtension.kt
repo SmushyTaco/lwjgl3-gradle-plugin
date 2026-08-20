@@ -74,17 +74,17 @@ abstract class LwjglExtension @Inject constructor(objects: ObjectFactory, provid
          * `"$GROUP:${Module.artifact}:${version}"`.
          */
         private const val GROUP = "org.lwjgl"
-        private const val CURRENT_LATEST_VERSION = "3.4.0"
+        private const val CURRENT_LATEST_VERSION = "3.4.2"
     }
     /**
      * LWJGL version to use for all resolved artifacts.
      *
      * The value is interpreted as a standard Maven/Gradle version string
-     * (for example `"3.4.0"` or `"3.4.1-SNAPSHOT"`). It is applied to the core
+     * (for example `"3.4.2"` or `"3.4.3-SNAPSHOT"`). It is applied to the core
      * `org.lwjgl:lwjgl` artifact as well as all selected module artifacts and
      * their native classifiers.
      *
-     * The default is `"3.4.0"`.
+     * The default is `"3.4.2"`.
      */
     val version: Property<String> = objects.property(String::class.java).convention(CURRENT_LATEST_VERSION)
     /**

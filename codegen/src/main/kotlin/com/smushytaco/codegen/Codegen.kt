@@ -60,7 +60,7 @@ private fun mavenCentral(): RemoteRepository =
     ).build()
 
 private const val LWJGL_GROUP = "org.lwjgl"
-private const val LWJGL_BOM_COORD = "org.lwjgl:lwjgl-bom:3.4.0"
+private const val LWJGL_BOM_COORD = "org.lwjgl:lwjgl-bom:3.4.2"
 
 @Suppress("SameParameterValue")
 private fun parseCoords(coords: String): Triple<String, String, String> {
