@@ -20,7 +20,7 @@ repositories {
 
 lwjgl {
     // Strongly recommended: set LWJGL version explicitly
-    version = "3.4.0"
+    version = "3.4.2"
 
     // Add all LWJGL modules + the correct native artifacts
     implementation(Preset.EVERYTHING)
@@ -65,7 +65,7 @@ This plugin handles all of that for you:
 ## ❌ Without this plugin (manual pain)
 
 ```kotlin
-val lwjglVersion = "3.4.0"
+val lwjglVersion = "3.4.2"
 val lwjglNatives = "natives-linux" // or macos, windows, etc.
 
 repositories {
@@ -107,7 +107,7 @@ repositories {
 }
 
 lwjgl {
-    version = "3.4.0"
+    version = "3.4.2"
     implementation(Preset.EVERYTHING)
 }
 ```
@@ -125,7 +125,7 @@ lwjgl {
 By default, the plugin uses:
 
 ```text
-3.4.0
+3.4.2
 ```
 
 ### Explicit version (recommended)
